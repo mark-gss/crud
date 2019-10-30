@@ -31,8 +31,34 @@ class CustomersController extends Controller
         // $customer = Customer::where('id', $customerID)->get();
         if(isset($customer)){
             Customer::where("id", $customerID)->update($request->all());
+        }else{
+            return response()->json(['message' => 'Customer Not found']);    
         }
         $customer = Customer::find($customerID);
         return response()->json($customer);
+    }
+
+    public function showCustomer($customerID)
+    {
+        $customer = Customer::find($customerID);
+        if($customer){
+            return response()->json($customer);
+        }else{
+            return response()->json(['message' => 'Customer not found']);
+        }
+    }
+
+    public function deleteCustomer(Request $request, $customerID)
+    {
+        $customer = Customer::findOrFail($customerID);
+        // return response()->json($customer);
+        if(isset($customer)){
+            Customer::where('id', $customerID)->delete();
+        }else{
+            return response()->json([
+                'status' => '500',
+                'message' => 'Customer Not found.'
+            ]);
+        }
     }
 }
